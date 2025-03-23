@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+    <h2 class="text-center text-light">User Dashboard</h2>
+    <h5 class="text-center fw-bold text-primary heading">Welcome, {{ session['user_name'] }}</h5>
+
+    <!-- Navigation Bar -->
+    <div class="d-flex justify-content-between align-items-center p-3 bg-dark rounded shadow-sm py-2 mt-2 mb-4">
+        <nav>
+            <a class="btn btn-outline-success px-3" href="{{ url_for('user_dashboard') }}">Home</a>
+            <a class="btn btn-outline-success px-3" href="{{ url_for('scores') }}">Scores</a>
+            <a class="btn btn-outline-success px-3" href="{{ url_for('summary') }}">Summary</a>
+        </nav>
+        <div class="d-flex align-items-center gap-3">
+            <form method="GET" action="{{ url_for('search') }}">
+                <div class="input-group">
+                    <input type="search" name="query" class="form-control" placeholder="Search" required />
+                    <button type="submit" class="btn btn-outline-primary">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quizzes Today -->
+    <div class="mt-4 p-4 bg-dark rounded shadow-sm">
+        <h3 class="text-center text-light fw-bold">Quizzes Today</h3>
+        {% set today_quizzes = quizzes | selectattr('date_of_quiz', 'equalto', date) | list %}
+        {% if today_quizzes %}
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ID</th>
+                        <th>No. of Questions</th>
+                        <th>Date</th>
+                        <th>Duration</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="table-secondary">
+                    {% for quiz in today_quizzes %}
+                    <tr>
+                        <td>{{ quiz.id }}</td>
+                        <td>{{ chapter_question_count.get(quiz.chapter_id, 0) }}</td>
+                        <td>{{ quiz.date_of_quiz }}</td>
+                        <td>{{ quiz.time_duration }}</td>
+                        <td>
+                            <a href="{{ url_for('view_quiz', quiz_id=quiz.id) }}" class="btn btn-sm btn-primary">View</a>
+                            <a href="{{ url_for('quiz_master', quiz_id=quiz.id) }}" class="btn btn-sm btn-success">Start</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center text-warning">No quizzes available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Upcoming Quizzes Section -->
+    <div class="mt-4 p-4 bg-dark rounded shadow-sm">
+        <h3 class="text-center text-light fw-bold">Upcoming Quizzes</h3>
+        {% set upcoming_quizzes = quizzes | selectattr('date_of_quiz', '>=', date) | list %}
+        {% if upcoming_quizzes %}
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ID</th>
+                        <th>No. of Questions</th>
+                        <th>Date</th>
+                        <th>Duration</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="table-secondary">
+                    {% for quiz in upcoming_quizzes %}
+                    <tr>
+                        <td>{{ quiz.id }}</td>
+                        <td>{{ chapter_question_count.get(quiz.chapter_id, 0) }}</td>
+                        <td>{{ quiz.date_of_quiz }}</td>
+                        <td>{{ quiz.time_duration }}</td>
+                        <td>
+                            <a href="{{ url_for('view_quiz', quiz_id=quiz.id) }}" class="btn btn-sm btn-primary">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center text-warning">No quizzes available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Previous Quizzes Section -->
+    <div class="mt-4 p-4 bg-dark rounded shadow-sm">
+        <h3 class="text-center text-light fw-bold">Previous Quizzes</h3>
+        {% set previous_quizzes = quizzes | selectattr('date_of_quiz', '<', date) | list %}
+        {% if previous_quizzes %}
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mt-3">
+                <thead class="table-danger">
+                    <tr>
+                        <th>ID</th>
+                        <th>No. of Questions</th>
+                        <th>Date</th>
+                        <th>Duration</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="table-secondary">
+                    {% for quiz in previous_quizzes %}
+                    <tr>
+                        <td>{{ quiz.id }}</td>
+                        <td>{{ chapter_question_count.get(quiz.chapter_id, 0) }}</td>
+                        <td>{{ quiz.date_of_quiz }}</td>
+                        <td>{{ quiz.time_duration }}</td>
+                        <td>
+                            <a href="{{ url_for('view_quiz', quiz_id=quiz.id) }}" class="btn btn-sm btn-primary">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center text-warning">No quizzes available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Chapter Wise Quizzes Section -->
+    <div class="mt-4 p-4 bg-dark rounded shadow-sm">
+        <h3 class="text-center text-light fw-bold">Chapter Wise Quizzes</h3>
+        {% if quizzes %}
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Chapter</th>
+                        <th>No. of Questions</th>
+                        <th>Date</th>
+                        <th>Duration</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="table-secondary">
+                    {% for quiz in quizzes %}
+                    <tr>
+                        <td>{{ chapters[quiz.chapter_id | int - 1].name if quiz.chapter_id | int - 1 < chapters|length else 'Invalid Index' }}</td>
+                        <td>{{ chapter_question_count.get(quiz.chapter_id, 0) }}</td>
+                        <td>{{ quiz.date_of_quiz }}</td>
+                        <td>{{ quiz.time_duration }}</td>
+                        <td>
+                            <a href="{{ url_for('view_quiz', quiz_id=quiz.id) }}" class="btn btn-sm btn-primary">View</a>
+                            {% if quiz.date_of_quiz >= date %}
+                            <a href="{{ url_for('quiz_master', quiz_id=quiz.id) }}" class="btn btn-sm btn-success">Start</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center text-warning">No quizzes available.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Scores{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2 class="text-center text-light">Your Quiz Scores</h2>
+    <!-- Navigation Bar -->
+    <div class="d-flex justify-content-between align-items-center p-3 bg-dark rounded shadow-sm py-2 mt-2 mb-4">
+        <nav>
+            <a class="btn btn-outline-success px-3" href="{{ url_for('user_dashboard') }}">Home</a>
+            <a class="btn btn-outline-success px-3" href="{{url_for('scores')}}">Scores</a>
+            <a class="btn btn-outline-success px-3" href="{{ url_for('summary') }}">Summary</a>
+        </nav>
+        <div class="d-flex align-items-center gap-3">
+            <form method="GET" action="{{ url_for('search') }}">
+                <div class="input-group">
+                    <input type="search" name="query" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="search-addon" required />
+                    <button type="submit" class="btn btn-outline-primary">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if scores %}
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-primary">
+                <tr>
+                    <th>Quiz ID</th>
+                    <th>Date of Quiz</th>
+                    <th>Time Duration</th>
+                    <th>Attempts</th>
+                    <th>Total Score</th>
+                    <th>Last Attempt Timestamp</th>
+                </tr>
+            </thead>
+            <tbody class="table-secondary">
+                {% for quiz in quizzes %}
+                {% set user_scores = scores | selectattr("quiz_id", "equalto", quiz.id) | list %}
+                {% set attempts = user_attempts | selectattr("quiz_id", "equalto", quiz.id) | list %}
+                {% set attempt_count = attempts | map(attribute="attempt_no") | unique | list | length %}
+                {% set total_score = user_scores | map(attribute="total_scored") | sum %}
+
+                {% set timestamps = user_scores | map(attribute='time_stamp_of_attempt') | list %}
+                {% set last_attempt = timestamps | max if timestamps else 'N/A' %}
+
+                <tr>
+                    <td>{{ quiz.id }}</td>
+                    <td>{{ quiz.date_of_quiz.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ quiz.time_duration }}</td>
+                    <td>{{ attempt_count }}</td>
+                    <td>{{ total_score }}</td>
+                    <td>{{ last_attempt }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-center text-warning h4">No scores available.</p>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('user_dashboard') }}" class="btn btn-lg btn-primary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

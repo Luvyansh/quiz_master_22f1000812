@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Add New Question{% endblock %}
+{% block body %}
+
+<div class="container mt-4">
+    <div class="card bg-dark text-light shadow-lg p-4">
+        <h2 class="heading text-center text-warning"><b>{{ quiz.chapter_id }}. {{ chapters[quiz.chapter_id - 1].name }}</b></h2>
+        <h5 class="text-center text-warning">New Question</h5>
+        
+        <form action="{{ url_for('add_question', quiz_id=quiz.id) }}" method="POST">
+            <!-- Question Details -->
+            <div class="mb-3">
+                <label class="form-label">Question Statement:</label>
+                <textarea name="question_statement" class="form-control border-0" rows="3" required></textarea>
+            </div>
+
+            <!-- Options Section -->
+            <div  class="card border-primary border-2 bg-dark text-light p-3 shadow">
+                <h5 class="heading text-center text-primary"><b>Single Option Correct</b></h5>
+                
+                <div class="mb-2">
+                    <label class="form-label">Option 1:</label>
+                    <input type="text" name="option_1" class="form-control border-0" required>
+                </div>
+                
+                <div class="mb-2">
+                    <label class="form-label">Option 2:</label>
+                    <input type="text" name="option_2" class="form-control  border-0" required>
+                </div>
+                
+                <div class="mb-2">
+                    <label class="form-label">Option 3:</label>
+                    <input type="text" name="option_3" class="form-control border-0" required>
+                </div>
+                
+                <div class="mb-2">
+                    <label class="form-label">Option 4:</label>
+                    <input type="text" name="option_4" class="form-control border-0" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Correct Option:</label>
+                    <input type="number" name="correct_option" min="1" max="4" class="form-control border-0" required>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-outline-primary btn-lg">Save and Next</button>
+                <a href="{{ url_for('quiz_details', quiz_id=quiz.id) }}" class="btn btn-outline-danger btn-lg">Close</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

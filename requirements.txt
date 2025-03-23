@@ -1,0 +1,6 @@
+Flask-SQLAlchemy
+matplotlib
+Flask
+Flask-Migrate
+plotly
+pandas

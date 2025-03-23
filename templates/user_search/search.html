@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Search results for '{{ query }}'{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+    <h2 class="text-center text-light">Search Results for '{{ query }}'</h2>
+    <h5 class="text-center fw-bold text-primary heading">Welcome, {{ session['user_name'] }}</h5>
+    <!-- Navigation Bar -->
+    <div class="d-flex justify-content-between align-items-center p-3 bg-dark rounded shadow-sm py-2 mt-2 mb-4">
+        <nav>
+            <a class="btn btn-outline-success px-3" href="{{ url_for('user_dashboard') }}">Home</a>
+            <a class="btn btn-outline-success px-3" href="{{url_for('quiz')}}">Scores</a>
+            <a class="btn btn-outline-success px-3" href="{{ url_for('summary') }}">Summary</a>
+        </nav>
+        <div class="d-flex align-items-center gap-3">
+            <form method="GET" action="{{ url_for('search') }}">
+                <div class="input-group">
+                    <input type="search" name="query" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="search-addon" required />
+                    <button type="submit" class="btn btn-outline-primary">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search based on Subject -->
+    <div class="mt-4 p-4 bg-dark rounded shadow-sm">
+        <h3 class="text-center text-light fw-bold">'{{ query }}' in subjects.</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Subject</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="table-secondary">
+                    {% if subjects %}
+                    {% for subject in subjects %}
+                    <tr>
+                        <td>{{ subject.name }}</td>
+                        <td>{{ subject.description }}</td>
+                        <td>
+                            <a href="{{ url_for('subject', subject_id=subject.id) }}" class="btn btn-sm btn-primary">View Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="3">No subjects named '{{ query }}' found.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Search based on Chapter -->
+    <div class="mt-4 p-4 bg-dark rounded shadow-sm">
+        <h3 class="text-center text-light fw-bold">'{{ query }}' in chapters.</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mt-3">
+                <thead class="table-danger">
+                    <tr>
+                        <th>Chapter</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="table-secondary">
+                    {% if chapters %}
+                    {% for chapter in chapters %}
+                    <tr>
+                        <td>{{ chapter.name }}</td>
+                        <td>{{ chapter.description }}</td>
+                        <td>
+                            <a href="{{ url_for('chapter', chapter_id=chapter.id) }}" class="btn btn-sm btn-primary">View Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="3">No chapters found.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Search based on Date -->
+    <div class="mt-4 p-4 bg-dark rounded shadow-sm">
+        <h3 class="text-center text-light fw-bold">Quizzes with '{{ query }}' in date.</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Chapter</th>
+                        <th>No. of Questions</th>
+                        <th>Date</th>
+                        <th>Duration (HH:MM:SS)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="table-secondary">
+                    {% if dates %}
+                    {% for quiz in dates %}
+                    <tr>
+                        <td>{{ quiz.chapter_id }} {{ all_chapters[quiz.chapter_id - 1].name }}</td>
+                        <td>{{ quiz.questions|length }}</td>
+                        <td>{{ quiz.date_of_quiz }}</td>
+                        <td>{{ quiz.time_duration }}</td>
+                        <td>
+                            <a href="{{ url_for('view_quiz', quiz_id=quiz.id) }}" class="btn btn-sm btn-primary">View Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="5">No quiz found.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Search based on Score -->
+    <div class="mt-4 p-4 bg-dark rounded shadow-sm">
+        <h3 class="text-center text-light fw-bold">Quizzes with '{{ query }}' in score.</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Chapter</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                        <th>Attempt Time (24 hour format)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="table-secondary">
+                    {% if scores %}
+                    {% for score in scores %}
+                    <tr>
+                        <td>{{ score.quiz_id }} {{ all_chapters[all_quizzes[score.quiz_id - 1].chapter_id - 1].name }}</td>
+                        <td>{{ score.total_scored|round }}</td>
+                        <td>{{ all_quizzes[score.quiz_id - 1].date_of_quiz }}</td>
+                        <td>{{ score.time_stamp_of_attempt }}</td>
+                        <td>
+                            <a href="{{ url_for('view_quiz', quiz_id=score.quiz_id) }}" class="btn btn-sm btn-primary">View Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="5">No quiz found.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

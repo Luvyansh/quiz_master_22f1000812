@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %} 
+{% block body %}
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-lg" style="background-color: #1E1E1E; color: #E0E0E0; width: 400px; border-radius: 12px;">
+      <h2 class="heading text-center mb-3">Login</h2>
+      <form action="/login" method="POST">
+        <div class="mb-3">
+          <label for="email_id" class="heading form-label">Email address</label>
+          <input type="email" class="form-control" id="email_id" name="email" style="background-color: #292929; color: #E0E0E0; border: none;">
+        </div>
+        <div class="mb-3">
+          <label for="password" class="heading form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" style="background-color: #292929; color: #E0E0E0; border: none;">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+        <p class="text-center mt-3"><a href="/register" style="color: #007BFF;">New user? Register</a></p>
+      </form>
+    </div>
+  </div>
+{% endblock %}

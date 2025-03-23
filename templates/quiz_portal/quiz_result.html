@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Results{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2 class="text-center text-light">Quiz Results</h2>
+    <p class="text-center text-warning h3">Your Score: <strong>{{ score }} / {{ total_questions }}</strong></p>
+
+    <div class="mt-4 p-4 bg-dark rounded shadow-sm">
+        <h3 class="text-light">Question-wise Breakdown</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th>#</th>
+                        <th>Question</th>
+                        <th>Your Answer</th>
+                        <th>Correct Answer</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody class="table-secondary">
+                    {% set ns = namespace(last_attempt_no = None) %}
+                    {% for attempt in attempts %}
+                        {% if ns.last_attempt_no != attempt.attempt_no %}
+                            <tr class="table-info">
+                                <td colspan="5" class="fw-bold text-center">Attempt No: {{ attempt.attempt_no }}</td>
+                            </tr>
+                            {% set ns.last_attempt_no = attempt.attempt_no %}
+                        {% endif %}
+                        <tr class="{% if attempt.is_correct %}table-success{% else %}table-danger{% endif %}">
+                            <td>{{ loop.index }}</td>
+                            <td>
+                                {% set question = questions | selectattr("id", "equalto", attempt.question_id) | first %}
+                                {{ question.question_statement if question else "Question Not Found" }}
+                            </td>
+                            <td>
+                                {% if attempt.selected_option %}
+                                    {% set question = questions | selectattr("id", "equalto", attempt.question_id) | first %}
+                                    {{ getattr(question, "option" ~ attempt.selected_option) if question else "Question Not Found" }}
+                                {% else %}
+                                    <span class="text-muted">Not Answered</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% set question = questions | selectattr("id", "equalto", attempt.question_id) | first %}
+                                {{ getattr(question, "option" ~ question.correct_option) if question else "Question Not Found" }}
+                            </td>
+                            <td>
+                                {% if attempt.is_correct %}
+                                    ✅ Correct
+                                {% else %}
+                                    ❌ Incorrect
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>                
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('user_dashboard') }}" class="btn btn-lg btn-primary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Summary{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2 class="text-light text-center">Quiz Summary</h2>
+    <!-- Navigation Bar -->
+    <div class="d-flex justify-content-between align-items-center p-3 bg-dark rounded shadow-sm py-2 mt-2 mb-4">
+        <nav>
+            <a class="btn btn-outline-success px-3" href="{{ url_for('admin_dashboard') }}">Home</a>
+            <a class="btn btn-outline-success px-3" href="{{url_for('quiz')}}">Quiz</a>
+            <a class="btn btn-outline-success px-3" href="{{ url_for('summary') }}">Summary</a>
+        </nav>
+        <div class="d-flex align-items-center gap-3">
+            <form method="GET" action="{{ url_for('search') }}">
+                <div class="input-group">
+                    <input type="search" name="query" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="search-addon" required />
+                    <button type="submit" class="btn btn-outline-primary">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Include Plotly JS -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <div class="row">
+        <!-- Subject-wise Quiz Distribution -->
+        <div class="col-md-6">
+            <div class="card bg-dark text-light mb-4 p-3">
+                <div class="card-body">
+                    <h4 class="text-center">Subject-wise Quiz Distribution</h4>
+                    <div id="bar-chart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Quiz Distribution -->
+        <div class="col-md-6">
+            <div class="card bg-dark text-light mb-4 p-3">
+                <div class="card-body">
+                    <h4 class="text-center">Subject wise User Attempts</h4>
+                    <div id="pie-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quizzes Details -->
+    <div class="card bg-dark text-light p-3">
+        <div class="card-body">
+            <h4 class="text-center">Quizzes Details</h4>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-dark text-light">
+                    <strong>Total Subjects:</strong> {{ subjects|length }}
+                </li>
+                <li class="list-group-item bg-dark text-light">
+                    <strong>Total Chapters:</strong> {{ chapters|length }}
+                </li>
+                <li class="list-group-item bg-dark text-light">
+                    <strong>Total Quizzes:</strong> {{ quizzes|length }} <br>
+                    {{ subject_question_counts }} <br>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Render Plotly Charts -->
+<script>
+    var barChartData = {{ bar_chart_json | safe }};
+    Plotly.newPlot('bar-chart', barChartData.data, barChartData.layout);
+
+    var pieChartData = {{ pie_chart_json | safe }};
+    Plotly.newPlot('pie-chart', pieChartData.data, pieChartData.layout);
+</script>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+
+{% block body %}
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-lg" style="background-color: #1E1E1E; color: #E0E0E0; width: 400px; border-radius: 12px;">
+      <h2 class="text-center mb-3" style="font-family: 'Poppins', sans-serif;">Register</h2>
+      <form action="/register" method="POST">
+        <div class="mb-3">
+          <label for="name" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="name" name="name" required style="background-color: #292929; color: #E0E0E0; border: none;">
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="email" name="email" required style="background-color: #292929; color: #E0E0E0; border: none;">
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" required style="background-color: #292929; color: #E0E0E0; border: none;">
+        </div>
+        <div class="mb-3">
+          <label for="confirm_password" class="form-label">Confirm Password</label>
+          <input type="password" class="form-control" id="confirm_password" name="confirm_password" required style="background-color: #292929; color: #E0E0E0; border: none;">
+        </div>
+        <div class="mb-3">
+          <label for="qualifications" class="form-label">Qualification</label>
+          <input type="text" class="form-control" id="qualifications" name="qualifications" required style="background-color: #292929; color: #E0E0E0; border: none;">
+        </div>
+        <div class="mb-3">
+          <label for="dob" class="form-label">Date of Birth</label>
+          <input type="date" class="form-control" id="dob" name="dob" required style="background-color: #292929; color: #E0E0E0; border: none;">
+        </div>
+        <input style="display: none;" type="radio" name="role"  value="user" checked="checked" />
+        <button type="submit" class="btn btn-primary w-100" style="background-color: #007BFF; border: none; border-radius: 8px;">Register</button>
+        <p class="text-center mt-3"><a href="/login" style="color: #007BFF;">Already have an account? Log in</a></p>
+      </form>
+    </div>
+  </div>
+{% endblock %} 

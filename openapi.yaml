@@ -1,0 +1,380 @@
+openapi: 3.0.0
+info:
+  title: Quiz Master API
+  description: API for user authentication, quiz management, subjects, chapters, and role-based access control.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+
+paths:
+  /login:
+    post:
+      summary: User login
+      description: Authenticate user and return session token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Successful login
+        "401":
+          description: Unauthorized
+
+  /register:
+    post:
+      summary: User registration
+      description: Register a new user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                  enum: [admin, user]
+      responses:
+        "201":
+          description: User created
+        "400":
+          description: Bad request
+
+  /subjects:
+    get:
+      summary: Get all subjects
+      description: Retrieve all available subjects.
+      responses:
+        "200":
+          description: List of subjects
+
+    post:
+      summary: Add a new subject
+      description: Admin-only endpoint to add a subject.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        "201":
+          description: Subject added
+        "403":
+          description: Forbidden
+
+  /subjects/{subject_id}:
+    get:
+      summary: Get a specific subject
+      description: Retrieve subject details by ID.
+      parameters:
+        - name: subject_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Subject details
+        "404":
+          description: Subject not found
+
+    put:
+      summary: Update a subject
+      description: Admin-only endpoint to update a subject.
+      parameters:
+        - name: subject_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        "200":
+          description: Subject updated
+        "403":
+          description: Forbidden
+
+    delete:
+      summary: Delete a subject
+      description: Admin-only endpoint to delete a subject.
+      parameters:
+        - name: subject_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Subject deleted
+        "403":
+          description: Forbidden
+
+  /chapters:
+    get:
+      summary: Get all chapters
+      description: Retrieve all chapters.
+      responses:
+        "200":
+          description: List of chapters
+
+    post:
+      summary: Add a new chapter
+      description: Admin-only endpoint to add a chapter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                subject_id:
+                  type: integer
+      responses:
+        "201":
+          description: Chapter added
+        "403":
+          description: Forbidden
+
+  /chapters/{chapter_id}:
+    get:
+      summary: Get a specific chapter
+      description: Retrieve chapter details by ID.
+      parameters:
+        - name: chapter_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Chapter details
+        "404":
+          description: Chapter not found
+
+    put:
+      summary: Update a chapter
+      description: Admin-only endpoint to update a chapter.
+      parameters:
+        - name: chapter_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                subject_id:
+                  type: integer
+      responses:
+        "200":
+          description: Chapter updated
+        "403":
+          description: Forbidden
+
+    delete:
+      summary: Delete a chapter
+      description: Admin-only endpoint to delete a chapter.
+      parameters:
+        - name: chapter_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Chapter deleted
+        "403":
+          description: Forbidden
+
+  /quiz:
+    get:
+      summary: Get all quizzes
+      description: Retrieve all quizzes for users.
+      responses:
+        "200":
+          description: A list of quizzes
+    post:
+      summary: Create a new quiz
+      description: Admin-only endpoint to create a new quiz.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                subject:
+                  type: string
+      responses:
+        "201":
+          description: Quiz created
+        "403":
+          description: Forbidden
+
+  /quiz/{quiz_id}:
+    get:
+      summary: Get a specific quiz
+      description: Retrieve quiz details by ID.
+      parameters:
+        - name: quiz_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Quiz details
+        "404":
+          description: Quiz not found
+    delete:
+      summary: Delete a quiz
+      description: Admin-only endpoint to delete a quiz.
+      parameters:
+        - name: quiz_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Quiz deleted
+        "403":
+          description: Forbidden
+
+  /quiz_master:
+    post:
+      summary: Attempt a quiz
+      description: Users can attempt a quiz by submitting answers. The system will evaluate and return the score.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quiz_id:
+                  type: integer
+                user_id:
+                  type: integer
+                answers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      question_id:
+                        type: integer
+                      answer:
+                        type: string
+      responses:
+        "200":
+          description: Quiz submitted successfully, returning the score.
+        "400":
+          description: Invalid request data.
+        "403":
+          description: Unauthorized access.
+
+  /scores:
+    get:
+      summary: Get user quiz scores
+      description: Retrieve scores of a user for all attempted quizzes.
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User scores retrieved successfully.
+        "404":
+          description: No scores found for the user.
+
+  /user_attempts:
+    get:
+      summary: Get user quiz attempt history
+      description: Retrieve a list of quizzes attempted by a user.
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of attempted quizzes retrieved successfully.
+        "404":
+          description: No attempts found for the user.
+
+  /search:
+    get:
+      summary: Search quizzes
+      description: Search for quizzes based on title or subject.
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of matching quizzes
+
+  /summary:
+    get:
+      summary: Get quiz summary
+      description: Retrieve a summary of a quiz, including performance statistics.
+      parameters:
+        - name: quiz_id
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Quiz summary
+
+components:
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: session
+
+security:
+  - sessionAuth: []

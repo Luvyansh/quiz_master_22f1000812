@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Delius:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #121212;
+    color: #E0E0E0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.vh-50 {
+    height: 25vh;
+}
+
+.heading {
+    font-family: 'Delius', cursive;
+}
+
+.formal {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.navbar-brand {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.navbar-brand:hover {
+    color: #ffcc00 !important;
+}
+
+.nav-link:hover {
+    color: #ffcc00 !important;
+}

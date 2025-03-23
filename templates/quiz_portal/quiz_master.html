@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Attempt Quiz{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2 class="text-light text-center">Attempting Quiz: {{ quiz.id }}</h2>
+    <p class="text-center"><strong>Duration:</strong> {{ quiz.time_duration }} minutes</p>
+
+    <!-- Timer Display -->
+    <div class="text-center text-warning h3" id="timer">Time Left: --:--:--</div>
+
+    <!-- Quiz Form -->
+    <form id="quizForm" action="{{ url_for('submit_quiz', quiz_id=quiz.id) }}" method="POST">
+        {% for question in questions %}
+            <div class="card bg-dark text-light mb-3">
+                <div class="card-body">
+                    <h5>Q{{ loop.index }}: {{ question.question_statement }}</h5>
+                    <div>
+                        {% for i in range(1, 5) %}
+                            <div class="form-check">
+                                <input type="radio" name="question_{{ question.id }}" value="{{ i }}" class="form-check-input">
+                                <label class="form-check-label">{{ getattr(question, "option" ~ i) }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-lg w-100">Submit Quiz</button>
+    </form>
+</div>
+
+<script>
+    function timeToSeconds(timeStr) {
+        let parts = timeStr.split(":").map(Number);
+        return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    }
+
+    let timeLeft = timeToSeconds("{{ quiz.time_duration }}");
+    let timerDisplay = document.getElementById("timer");
+
+    function updateTimer() {
+        if (timeLeft <= 0) {
+            submitQuiz();  // Auto-submit when timer reaches zero
+            return;
+        }
+
+        let hours = Math.floor(timeLeft / 3600);
+        let minutes = Math.floor((timeLeft % 3600) / 60);
+        let seconds = timeLeft % 60;
+
+        timerDisplay.innerText = `Time Left: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+        timeLeft--;
+    }
+
+    function submitQuiz() {
+        clearInterval(timerInterval); // Stop the timer interval before submission
+        document.getElementById("quizForm").submit();
+    }
+
+    // Start the timer when the page loads
+    let timerInterval = setInterval(updateTimer, 1000);
+</script>
+
+{% endblock %}

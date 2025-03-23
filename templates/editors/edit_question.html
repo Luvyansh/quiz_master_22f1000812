@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Edit Question{% endblock %}
+{% block body %}
+
+<div class="container mt-4">
+    <div class="card bg-dark text-light shadow-lg p-4">
+        <h3 class="heading text-center text-warning"><b>Edit Question</b></h3>
+        <form action="{{ url_for('edit_question', question_id=question.id) }}" method="POST">
+            <div class="mb-3">
+                <label class="form-label">Question Statement:</label>
+                <textarea name="question_statement" class="form-control border-0" required>{{ question.question_statement }}</textarea>
+            </div>
+
+            <!-- Options Section -->
+            <div  class="card border-primary border-2 bg-dark text-light p-3 shadow">
+                <h5 class="heading text-center text-warning"><b>Options</b></h5>
+
+                <div class="mb-2">
+                    <label class="form-label">Option 1:</label>
+                    <input type="text" name="option1" value="{{ question.option1 }}" class="form-control border-0" required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Option 2:</label>
+                    <input type="text" name="option2" value="{{ question.option2 }}" class="form-control border-0" required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Option 3:</label>
+                    <input type="text" name="option3" value="{{ question.option3 }}" class="form-control border-0" required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Option 4:</label>
+                    <input type="text" name="option4" value="{{ question.option4 }}" class="form-control border-0" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Correct Option:</label>
+                    <input type="number" name="correct_option" value="{{ question.correct_option }}" min="1" max="4" class="form-control border-0" required>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-outline-primary btn-lg">Save Changes</button>
+                <a href="{{ url_for('quiz_details', quiz_id=question.quiz_id) }}" class="btn btn-outline-danger btn-lg">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

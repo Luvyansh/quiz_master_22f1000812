@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Edit Chapter{% endblock %} 
+{% block body %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-lg" style="background-color: #1E1E1E; color: #E0E0E0; width: 400px; border-radius: 12px;">
+        <h2>Edit Chapter</h2>
+        <form action="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" method="POST">
+            <div class="dropdown mb-3">
+                <label for="subject_id" class="form-label">Subject</label>
+                <select class="form-select" aria-label="Default select example" name="subject_id">
+                    {% for subject in subjects %}
+                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="chapter_name" class="form-label">Chapter Name</label>
+                <input type="text" class="form-control" id="chapter_name" name="chapter_name" value="{{ chapter.name }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" class="form-control" id="description" name="description" value="{{ chapter.description }}" required>
+            </div>
+            <button type="submit" class="btn btn-success">Update Chapter</button>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

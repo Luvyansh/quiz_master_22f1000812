@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Quiz Details{% endblock %}
+{% block body %}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="heading text-light">{{ quiz.id }} - {{ chapters[quiz.chapter_id|int - 1].name }}</h2>
+        <a href="{{ url_for('quiz') }}" class="btn btn-outline-light">Go Back</a>
+    </div>
+
+    <!-- Questions Section -->
+    <div class="row">
+        {% if quiz.questions %}
+            {% for question in quiz.questions %}
+            <div class="col-md-6">
+                <div class="card text-light bg-dark shadow-sm mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Q{{ loop.index }}: {{ question.question_statement }}</h5>
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('edit_question', question_id=question.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ url_for('delete_question', question_id=question.id) }}" method="POST">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this question?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center">
+                <p class="text-light heading">No questions available for this quiz. Add a new question below.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Add Question Button -->
+    <div class="text-center mt-4">
+        <a href="{{ url_for('add_question', quiz_id=quiz.id) }}" class="btn btn-outline-primary btn-lg">
+            + Add Question
+        </a>
+    </div>
+</div>
+
+{% endblock %}

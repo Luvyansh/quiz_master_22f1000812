@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Edit Quiz{% endblock %} 
+{% block body %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-lg" style="background-color: #1E1E1E; color: #E0E0E0; width: 400px; border-radius: 12px;">
+        <h2>Edit Quiz</h2>
+        <form action="{{ url_for('edit_quiz', quiz_id=quiz.id) }}" method="POST">
+            <div class="mb-3">
+                <label for="chapter_id" class="form-label">Chapter ID</label>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Select Chapter
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {% for chapter in chapters %}
+                        <li>
+                            <a class="dropdown-item chapter-option" href="#" data-id="{{ chapter.id }}">{{ chapter.id }} - {{ chapter.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <input type="hidden" id="chapter_id" name="chapter_id" required>
+            </div>
+            <div class="mb-3">
+                <label for="date_of_quiz" class="form-label">Date</label>
+                <input type="date" class="form-control" id="date_of_quiz" name="date_of_quiz" value="{{ quiz.date_of_quiz }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="time_duration" class="form-label">Duration (HH:MM:SS)</label>
+                <input type="text" class="form-control" id="time_duration" name="time_duration" value="{{ quiz.time_duration }}" pattern="^([0-9]{2}):([0-9]{2}):([0-9]{2})$" placeholder="HH:MM:SS" required>
+                <small class="text-muted">Example: 01:30:00 (1 hour 30 minutes)</small>
+            </div>
+            <button type="submit" class="btn btn-success">Update Quiz</button>
+            <a href="{{ url_for('quiz') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".chapter-option").forEach(item => {
+            item.addEventListener("click", function (event) {
+                event.preventDefault();
+                let selectedText = this.textContent;
+                let selectedId = this.getAttribute("data-id");
+
+                document.getElementById("dropdownMenuButton").textContent = selectedText;
+                document.getElementById("chapter_id").value = selectedId;
+            });
+        });
+    });
+</script>
+
+{% endblock %}

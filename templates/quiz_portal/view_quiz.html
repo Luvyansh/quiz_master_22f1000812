@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}View Quiz{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center text-light">Quiz Details</h2>
+    <h5 class="text-center fw-bold text-primary heading">Welcome, {{ session['user_name'] }}</h5>
+    <!-- Navigation Bar -->
+    <div class="d-flex justify-content-between align-items-center p-3 bg-dark rounded shadow-sm py-2 mt-2 mb-4">
+        <nav>
+            <a class="btn btn-outline-success px-3" href="{{ url_for('user_dashboard') }}">Home</a>
+            <a class="btn btn-outline-success px-3" href="{{url_for('scores')}}">Scores</a>
+            <a class="btn btn-outline-success px-3" href="{{ url_for('summary') }}">Summary</a>
+        </nav>
+        <div class="d-flex align-items-center gap-3">
+            <form method="GET" action="{{ url_for('search') }}">
+                <div class="input-group">
+                    <input type="search" name="query" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="search-addon" required />
+                    <button type="submit" class="btn btn-outline-primary">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="card bg-dark text-light p-4 shadow-lg rounded" style="width: 400px; border: 2px solid #000;">
+            <h3 class="text-center">Quiz ID : {{ quiz.id }}</h3>
+
+            <div class="mt-2">
+                <label class="fw-bold">Subject :</label>
+                <span class="form-control border border-dark">{{ subjects[chapters[quiz.chapter_id - 1].subject_id - 1].name }}</span>
+            </div>
+
+            <div class="mt-2">
+                <label class="fw-bold">Chapter :</label>
+                <span class="form-control border border-dark">{{ quiz.chapter.name }}</span>
+            </div>
+
+            <div class="mt-2">
+                <label class="fw-bold">Number of Questions :</label>
+                <span class="form-control bg-light border border-dark">{{ quiz.questions|length }}</span>
+            </div>
+
+            <div class="mt-2">
+                <label class="fw-bold">Scheduled Date :</label>
+                <span class="form-control bg-light border border-dark">{{ quiz.date_of_quiz.strftime('%d/%m/%Y') }}</span>
+            </div>
+
+            <div class="mt-2">
+                <label class="fw-bold">Duration (hh:mm) :</label>
+                <span class="form-control bg-light border border-dark">{{ quiz.time_duration }}</span>
+            </div>
+
+            <div class="text-center mt-4">
+                <button onclick="history.back()" class="btn btn-primary">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

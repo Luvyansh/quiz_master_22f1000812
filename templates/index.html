@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block body %}
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0); }
+    }
+
+    .container {
+        animation: fadeIn 1.5s ease-in-out;
+        position: relative;
+        z-index: 2;
+    }
+
+    .heading {
+        animation: fadeIn 2s ease-in-out;
+        position: relative;
+        z-index: 2;
+    }
+
+    .btn-container {
+        animation: fadeIn 2.5s ease-in-out;
+        position: relative;
+        z-index: 2;
+    }
+
+    .svg-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(30deg);
+        z-index: 1;
+    }
+
+    .quiz-svg {
+        width: 1250px;
+        height: auto;
+        animation: float 3s ease-in-out infinite;
+        opacity: 0.15;
+    }
+</style>
+
+<div class="container d-flex flex-column justify-content-center align-items-center vh-100 text-white">
+    <div class="svg-container">
+        <img src="/static/quiz_illustration.svg" alt="Quiz Illustration" class="quiz-svg">
+    </div>
+    <h1 class="heading display-1 fw-bold mb-4 text-center">Welcome to Quiz Master</h1>
+    <div class="btn-container d-flex gap-3">
+        <a href="/login" class="btn btn-success px-4 py-2">Login</a>
+        <a href="/register" class="btn btn-primary px-4 py-2">Register</a>
+    </div>
+</div>
+{% endblock %}
