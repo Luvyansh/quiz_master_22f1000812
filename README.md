@@ -42,8 +42,8 @@ quiz_master/
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/quiz-master.git
-   cd quiz-master
+   git clone https://github.com/luvyansh/quiz_master_22f1000812.git
+   cd quiz_master_22f1000812
    ```
 2. Create a virtual environment:
    ```sh
