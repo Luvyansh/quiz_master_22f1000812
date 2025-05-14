@@ -54,16 +54,11 @@ quiz_master/
    ```sh
    pip install -r requirements.txt
    ```
-4. Set up environment variables:
+4. Run the Flask application:
    ```sh
-   export FLASK_APP=main.py
-   export FLASK_ENV=development
+   python main.py
    ```
-5. Run the Flask application:
-   ```sh
-   flask run
-   ```
-6. Open the application in your browser at `http://localhost:5000`
+5. Open the application in your browser at `http://localhost:5000`
 
 ## API Endpoints
 
